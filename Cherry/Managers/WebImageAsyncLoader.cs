@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Cherry.Managers
 {
-    internal class WebImageAsyncLoader : IDisposable, ISpriteAsyncLoader
+    internal class WebImageAsyncLoader : IDisposable
     {
         private readonly SiraLog _siraLog;
         private readonly IHttpService _httpService;
@@ -42,7 +42,7 @@ namespace Cherry.Managers
                     {
                         return sprite;
                     }
-                    sprite = BeatSaberMarkupLanguage.Utilities.LoadSpriteRaw(imageBytes);
+                    sprite = await BeatSaberMarkupLanguage.Utilities.LoadSpriteAsync(imageBytes);
                     sprite.texture.wrapMode = TextureWrapMode.Clamp;
                     _spriteCache.Add(path, sprite);
                     return sprite;

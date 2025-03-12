@@ -29,17 +29,17 @@ namespace Cherry.Managers
         public bool LevelIsInstalled(string hash, bool wip = false)
         {
             string cleanerHash = $"custom_level_{hash.ToUpper()}";
-            bool levelExists = _beatmapLevelsModel.allLoadedBeatmapLevelPackCollection.beatmapLevelPacks.Any(bm => bm.beatmapLevelCollection.beatmapLevels.Any(lvl => wip ? lvl.levelID.StartsWith(cleanerHash) : lvl.levelID == cleanerHash));
+            bool levelExists = _beatmapLevelsModel.GetAllPacks().Any(bm => bm.AllBeatmapLevels().Any(lvl => wip ? lvl.levelID.StartsWith(cleanerHash) : lvl.levelID == cleanerHash));
             return levelExists;
         }
 
-        public IPreviewBeatmapLevel? TryGetLevel(string hash, bool wip = false)
+        public BeatmapLevel? TryGetLevel(string hash, bool wip = false)
         {
             string cleanerHash = $"custom_level_{hash.ToUpper()}";
-            return _beatmapLevelsModel.allLoadedBeatmapLevelPackCollection.beatmapLevelPacks.SelectMany(bm => bm.beatmapLevelCollection.beatmapLevels).FirstOrDefault(lvl => wip ? lvl.levelID.StartsWith(cleanerHash) : lvl.levelID == cleanerHash);
+            return _beatmapLevelsModel.GetAllPacks().SelectMany(bm => bm.AllBeatmapLevels()).FirstOrDefault(lvl => wip ? lvl.levelID.StartsWith(cleanerHash) : lvl.levelID == cleanerHash);
         }
 
-        public async Task<IPreviewBeatmapLevel?> DownloadLevel(string name, string hash, string url, State state, CancellationToken token, IProgress<float>? downloadProgress = null)
+        public async Task<BeatmapLevel?> DownloadLevel(string name, string hash, string url, State state, CancellationToken token, IProgress<float>? downloadProgress = null)
         {
             var response = await _httpService.GetAsync(url, downloadProgress, token);
             if (!response.Successful)
@@ -55,7 +55,7 @@ namespace Cherry.Managers
 
             // Eris's black magic
             var semaphoreSlim = new SemaphoreSlim(0, 1);
-            void Release(SongCore.Loader _, ConcurrentDictionary<string, CustomPreviewBeatmapLevel> __)
+            void Release(SongCore.Loader _, ConcurrentDictionary<string, BeatmapLevel> __)
             {
                 SongCore.Loader.SongsLoadedEvent -= Release;
                 semaphoreSlim?.Release();

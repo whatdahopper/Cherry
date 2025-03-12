@@ -135,7 +135,7 @@ namespace Cherry.UI
             using MemoryStream ms = new MemoryStream();
             await mrs.CopyToAsync(ms);
 
-            _cherryImage.sprite = BeatSaberMarkupLanguage.Utilities.LoadSpriteRaw(ms.ToArray());
+            _cherryImage.sprite = await BeatSaberMarkupLanguage.Utilities.LoadSpriteAsync(ms.ToArray());
             _cherryImage.sprite.texture.wrapMode = TextureWrapMode.Clamp;
         }
 

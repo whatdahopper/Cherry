@@ -131,7 +131,7 @@ namespace Cherry.UI
             await mrs.CopyToAsync(ms);
 
             _image.OnClickEvent += Clicked;
-            _image.sprite = BeatSaberMarkupLanguage.Utilities.LoadSpriteRaw(ms.ToArray());
+            _image.sprite = await BeatSaberMarkupLanguage.Utilities.LoadSpriteAsync(ms.ToArray());
             _image.sprite.texture.wrapMode = TextureWrapMode.Clamp;
             RequestManager_SongStateChange(null!, null!);
 
